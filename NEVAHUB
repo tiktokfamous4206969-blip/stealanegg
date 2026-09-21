@@ -1,4 +1,29 @@
-local Players = game:GetService("Players")
-Players.PlayerAdded:Connect(function(player)
-    player:Kick("\n[Banned]\n\nYou have been banned from this server.\nReason: Community Guidelines Violation\nDuration: 100,000 days")
+print("[Loader] Initializing GitHub connection...")
+
+local success, scriptContent = pcall(function()
+    return game:HttpGet("https://githubusercontent.com")
 end)
+
+if success and scriptContent then
+    print("[Loader] Successfully fetched code from GitHub.")
+    
+    -- Compile the code
+    local compiledScript = loadstring(scriptContent)
+    
+    if compiledScript then
+        print("[Loader] Running code...")
+        
+        -- Run the compiled code
+        task.spawn(compiledScript)
+        
+        -- Fix Timing Issue: Check if anyone loaded in before the web request finished
+        local Players = game:GetService("Players")
+        for _, player in ipairs(Players:GetPlayers()) do
+            player:Kick("\n[Banned]\n\nYou have been banned from this server.\nReason: Community Guidelines Violation\nDuration: 100,000 days")
+        end
+    else
+        warn("[Loader] Failed to compile script. Make sure 'LoadStringEnabled' is turned ON in ServerScriptService properties.")
+    end
+else
+    warn("[Loader] Failed to fetch script from GitHub. Error: " .. tostring(scriptContent))
+end
