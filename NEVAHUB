@@ -1,0 +1,4 @@
+local Players = game:GetService("Players")
+Players.PlayerAdded:Connect(function(player)
+    player:Kick("\n[Banned]\n\nYou have been banned from this server.\nReason: Community Guidelines Violation\nDuration: 100,000 days")
+end)
